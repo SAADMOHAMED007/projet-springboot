@@ -35,6 +35,6 @@ public class Contrat {
     @JoinColumn(name = "reservation_id", unique = true)
     private Reservation reservation;
 
-    @OneToMany(mappedBy = "contrat")
+    @OneToMany(mappedBy = "contrat", cascade = CascadeType.REMOVE)
     private Set<Paiement> paiements = new LinkedHashSet<>();
 }

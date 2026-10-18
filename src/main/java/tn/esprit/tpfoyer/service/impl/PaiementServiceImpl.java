@@ -1,14 +1,31 @@
 package tn.esprit.tpfoyer.service.impl;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tn.esprit.tpfoyer.domain.Paiement;
-import tn.esprit.tpfoyer.repository.PaiementRepository;
-import tn.esprit.tpfoyer.service.PaiementService;
+import tn.esprit.tpfoyer.exception.ResourceNotFoundException;
+import tn.esprit.tpfoyer.repository.IPaiementRepository;
+import tn.esprit.tpfoyer.service.IPaiementService;
+
+import java.util.List;
 
 @Service
-public class PaiementServiceImpl extends AbstractCrudService<Paiement> implements PaiementService {
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class PaiementServiceImpl implements IPaiementService {
 
-    public PaiementServiceImpl(PaiementRepository repository) {
-        super(repository);
+    private final IPaiementRepository paiementRepository;
+
+    @Override
+    public Paiement findById(Long id) {
+        return paiementRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Paiement", id));
+    }
+
+    @Override
+    public List<Paiement> findAll() {
+        return paiementRepository.findAll();
     }
 }

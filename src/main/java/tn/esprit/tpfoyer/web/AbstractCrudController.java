@@ -23,7 +23,7 @@ public abstract class AbstractCrudController<T> {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public T create(@RequestBody T entity) {
-        return service.save(entity);
+        return service.create(entity);
     }
 
     @GetMapping
@@ -38,9 +38,7 @@ public abstract class AbstractCrudController<T> {
 
     @PutMapping("/{id}")
     public T update(@PathVariable Long id, @RequestBody T entity) {
-        service.findById(id);
-        setId(entity, id);
-        return service.save(entity);
+        return service.update(id, entity);
     }
 
     @DeleteMapping("/{id}")
@@ -49,5 +47,4 @@ public abstract class AbstractCrudController<T> {
         service.deleteById(id);
     }
 
-    protected abstract void setId(T entity, Long id);
 }

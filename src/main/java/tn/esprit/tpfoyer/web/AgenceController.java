@@ -3,7 +3,7 @@ package tn.esprit.tpfoyer.web;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.tpfoyer.domain.Agence;
-import tn.esprit.tpfoyer.service.AgenceService;
+import tn.esprit.tpfoyer.service.IAgenceService;
 import tn.esprit.tpfoyer.web.dto.AgenceRequest;
 import tn.esprit.tpfoyer.web.dto.AgenceResponse;
 
@@ -13,16 +13,16 @@ import java.util.List;
 @RequestMapping("/api/agences")
 public class AgenceController {
 
-    private final AgenceService agenceService;
+    private final IAgenceService agenceService;
 
-    public AgenceController(AgenceService agenceService) {
+    public AgenceController(IAgenceService agenceService) {
         this.agenceService = agenceService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public AgenceResponse create(@RequestBody AgenceRequest request) {
-        return toResponse(agenceService.save(toEntity(request)));
+        return toResponse(agenceService.create(toEntity(request)));
     }
 
     @GetMapping
@@ -37,10 +37,7 @@ public class AgenceController {
 
     @PutMapping("/{id}")
     public AgenceResponse update(@PathVariable Long id, @RequestBody AgenceRequest request) {
-        agenceService.findById(id);
-        Agence agence = toEntity(request);
-        agence.setIdAgence(id);
-        return toResponse(agenceService.save(agence));
+        return toResponse(agenceService.update(id, toEntity(request)));
     }
 
     @DeleteMapping("/{id}")

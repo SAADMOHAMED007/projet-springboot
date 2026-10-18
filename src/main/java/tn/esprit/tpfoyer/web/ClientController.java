@@ -3,7 +3,7 @@ package tn.esprit.tpfoyer.web;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.tpfoyer.domain.Client;
-import tn.esprit.tpfoyer.service.ClientService;
+import tn.esprit.tpfoyer.service.IClientService;
 import tn.esprit.tpfoyer.web.dto.ClientRequest;
 import tn.esprit.tpfoyer.web.dto.ClientResponse;
 
@@ -13,16 +13,16 @@ import java.util.List;
 @RequestMapping("/api/clients")
 public class ClientController {
 
-    private final ClientService clientService;
+    private final IClientService clientService;
 
-    public ClientController(ClientService clientService) {
+    public ClientController(IClientService clientService) {
         this.clientService = clientService;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ClientResponse create(@RequestBody ClientRequest request) {
-        return toResponse(clientService.save(toEntity(request)));
+        return toResponse(clientService.create(toEntity(request)));
     }
 
     @GetMapping
@@ -37,10 +37,7 @@ public class ClientController {
 
     @PutMapping("/{id}")
     public ClientResponse update(@PathVariable Long id, @RequestBody ClientRequest request) {
-        clientService.findById(id);
-        Client client = toEntity(request);
-        client.setIdClient(id);
-        return toResponse(clientService.save(client));
+        return toResponse(clientService.update(id, toEntity(request)));
     }
 
     @DeleteMapping("/{id}")

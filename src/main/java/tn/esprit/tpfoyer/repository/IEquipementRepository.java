@@ -3,5 +3,5 @@ package tn.esprit.tpfoyer.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import tn.esprit.tpfoyer.domain.Equipement;
 
-public interface EquipementRepository extends JpaRepository<Equipement, Long> {
+public interface IEquipementRepository extends JpaRepository<Equipement, Long> {
 }
