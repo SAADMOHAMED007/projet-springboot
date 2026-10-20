@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idMaintenance")
@@ -27,6 +28,8 @@ public class Maintenance {
     private LocalDate dateFin;
 
     private String description;
+
+    private BigDecimal cout;
 
     @ManyToOne
     @JoinColumn(name = "vehicule_id")

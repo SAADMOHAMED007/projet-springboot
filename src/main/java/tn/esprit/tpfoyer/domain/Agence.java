@@ -1,5 +1,6 @@
 package tn.esprit.tpfoyer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
@@ -35,5 +36,6 @@ public class Agence {
     private Set<Employe> employes = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "agence")
+    @JsonIgnore
     private Set<Vehicule> vehicules = new LinkedHashSet<>();
 }

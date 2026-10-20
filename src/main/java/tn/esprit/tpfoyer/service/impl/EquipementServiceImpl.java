@@ -33,10 +33,14 @@ public class EquipementServiceImpl extends AbstractCrudService<Equipement> imple
         if (equipement.getLibelle() == null || equipement.getLibelle().isBlank()) {
             throw new IllegalArgumentException("Le libellé de l'équipement est obligatoire");
         }
+        if (equipement.getQuantite() != null && equipement.getQuantite() < 0) {
+            throw new IllegalArgumentException("La quantité de l'équipement ne peut pas être négative");
+        }
     }
 
     @Override
     protected void copyMutableFields(Equipement existing, Equipement updates) {
         existing.setLibelle(updates.getLibelle());
+        existing.setQuantite(updates.getQuantite());
     }
 }

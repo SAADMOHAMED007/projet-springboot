@@ -25,6 +25,8 @@ public class Equipement {
 
     private String libelle;
 
+    private Integer quantite;
+
     @ManyToMany(mappedBy = "equipements")
     private Set<Vehicule> vehicules = new LinkedHashSet<>();
 }

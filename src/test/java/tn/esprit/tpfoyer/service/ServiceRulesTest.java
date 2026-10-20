@@ -156,6 +156,16 @@ class ServiceRulesTest {
     }
 
     @Test
+    void equipementRejectsNegativeQuantity() {
+        EquipementServiceImpl service = new EquipementServiceImpl(equipementRepository);
+        Equipement equipement = new Equipement();
+        equipement.setLibelle("GPS");
+        equipement.setQuantite(-1);
+
+        assertThrows(IllegalArgumentException.class, () -> service.create(equipement));
+    }
+
+    @Test
     void clientRequiresNameAndEmail() {
         ClientServiceImpl service = new ClientServiceImpl(clientRepository);
         Client client = new Client();
@@ -172,5 +182,14 @@ class ServiceRulesTest {
         reservation.setDateFin(LocalDate.of(2026, 10, 9));
 
         assertThrows(IllegalArgumentException.class, () -> service.create(reservation));
+    }
+
+    @Test
+    void maintenanceRejectsNegativeCost() {
+        MaintenanceServiceImpl service = new MaintenanceServiceImpl(maintenanceRepository);
+        Maintenance maintenance = new Maintenance();
+        maintenance.setCout(new BigDecimal("-0.01"));
+
+        assertThrows(IllegalArgumentException.class, () -> service.create(maintenance));
     }
 }

@@ -1,7 +1,6 @@
 package tn.esprit.tpfoyer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "idPaiement")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,6 +28,7 @@ public class Paiement {
     @Enumerated(EnumType.STRING)
     private ModePaiement modePaiement;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "contrat_id")
     private Contrat contrat;

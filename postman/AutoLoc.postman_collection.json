@@ -1,0 +1,92 @@
+{
+  "info": {
+    "name": "AutoLoc - Atelier 5",
+    "description": "Scénarios CRUD, erreurs HTTP et cascade Contrat/Paiement. baseUrl inclut le context-path /api.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8081/api" },
+    { "key": "contratId", "value": "" },
+    { "key": "paiementId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Agences",
+      "item": [
+        { "name": "Lister les agences (200)", "request": { "method": "GET", "url": "{{baseUrl}}/agences" } },
+        { "name": "Agence absente (404)", "request": { "method": "GET", "url": "{{baseUrl}}/agences/9999" } },
+        { "name": "Créer agence (201)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nom\": \"Agence Tunis\",\n  \"ville\": \"Tunis\",\n  \"adresse\": \"Centre-ville\",\n  \"telephone\": \"71123456\"\n}" }, "url": "{{baseUrl}}/agences" } },
+        { "name": "Agence invalide - nom vide (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"nom\": \" \" }" }, "url": "{{baseUrl}}/agences" } }
+      ]
+    },
+    {
+      "name": "Clients",
+      "item": [
+        { "name": "Lister les clients (200)", "request": { "method": "GET", "url": "{{baseUrl}}/clients" } },
+        { "name": "Client absent (404)", "request": { "method": "GET", "url": "{{baseUrl}}/clients/9999" } },
+        { "name": "Client invalide - email absent (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"nom\": \"Client test\" }" }, "url": "{{baseUrl}}/clients" } }
+      ]
+    },
+    {
+      "name": "Employés",
+      "item": [
+        { "name": "Lister les employés (200)", "request": { "method": "GET", "url": "{{baseUrl}}/employes" } },
+        { "name": "Employé absent (404)", "request": { "method": "GET", "url": "{{baseUrl}}/employes/9999" } },
+        { "name": "Employé invalide - nom absent (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"prenom\": \"Samir\" }" }, "url": "{{baseUrl}}/employes" } }
+      ]
+    },
+    {
+      "name": "Véhicules",
+      "item": [
+        { "name": "Lister les véhicules (200)", "request": { "method": "GET", "url": "{{baseUrl}}/vehicules" } },
+        { "name": "Véhicule absent (404)", "request": { "method": "GET", "url": "{{baseUrl}}/vehicules/9999" } },
+        { "name": "Véhicule invalide - tarif négatif (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"immatriculation\": \"TN-0000\",\n  \"marque\": \"Test\",\n  \"modele\": \"Test\",\n  \"categorie\": \"CITADINE\",\n  \"tarifJournalier\": -1,\n  \"statut\": \"DISPONIBLE\"\n}" }, "url": "{{baseUrl}}/vehicules" } }
+      ]
+    },
+    {
+      "name": "Équipements",
+      "item": [
+        { "name": "Lister les équipements (200)", "request": { "method": "GET", "url": "{{baseUrl}}/equipements" } },
+        { "name": "Équipement absent (404)", "request": { "method": "GET", "url": "{{baseUrl}}/equipements/9999" } },
+        { "name": "Équipement invalide - quantité négative (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"libelle\": \"GPS\", \"quantite\": -1 }" }, "url": "{{baseUrl}}/equipements" } }
+      ]
+    },
+    {
+      "name": "Réservations",
+      "item": [
+        { "name": "Lister les réservations (200)", "request": { "method": "GET", "url": "{{baseUrl}}/reservations" } },
+        { "name": "Réservation absente (404)", "request": { "method": "GET", "url": "{{baseUrl}}/reservations/9999" } },
+        { "name": "Réservation invalide - dates inversées (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"dateDebut\": \"2026-11-10\",\n  \"dateFin\": \"2026-11-09\",\n  \"client\": { \"idClient\": 1 },\n  \"vehicule\": { \"idVehicule\": 1 }\n}" }, "url": "{{baseUrl}}/reservations" } }
+      ]
+    },
+    {
+      "name": "Contrats",
+      "item": [
+        { "name": "Lister les contrats (200)", "request": { "method": "GET", "url": "{{baseUrl}}/contrats" } },
+        { "name": "Contrat absent (404)", "request": { "method": "GET", "url": "{{baseUrl}}/contrats/9999" } },
+        { "name": "Créer un contrat avec ses paiements (201)", "event": [{ "listen": "test", "script": { "exec": ["const contrat = pm.response.json();", "pm.collectionVariables.set('contratId', contrat.idContrat);", "if (contrat.paiements && contrat.paiements.length) pm.collectionVariables.set('paiementId', contrat.paiements[0].idPaiement);", "pm.test('Contrat créé avec 201', () => pm.response.to.have.status(201));"] } }], "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"dateSignature\": \"2026-11-02\",\n  \"montantTotal\": 480.00,\n  \"valide\": true,\n  \"paiements\": [\n    { \"montant\": 150.00, \"datePaiement\": \"2026-11-02\", \"modePaiement\": \"CARTE\" },\n    { \"montant\": 330.00, \"datePaiement\": \"2026-11-06\", \"modePaiement\": \"VIREMENT\" }\n  ]\n}" }, "url": "{{baseUrl}}/contrats" } },
+        { "name": "Modifier le contrat sans toucher aux paiements (200)", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"montantTotal\": 520.00, \"valide\": true }" }, "url": "{{baseUrl}}/contrats/{{contratId}}" } },
+        { "name": "Montant négatif (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"montantTotal\": -1.00, \"valide\": true }" }, "url": "{{baseUrl}}/contrats" } },
+        { "name": "Contrat absent en modification (404)", "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"montantTotal\": 520.00 }" }, "url": "{{baseUrl}}/contrats/9999" } },
+        { "name": "Supprimer le contrat et ses paiements (204)", "request": { "method": "DELETE", "url": "{{baseUrl}}/contrats/{{contratId}}" } }
+      ]
+    },
+    {
+      "name": "Paiements",
+      "item": [
+        { "name": "Lister les paiements (200)", "request": { "method": "GET", "url": "{{baseUrl}}/paiements" } },
+        { "name": "Paiement absent (404)", "request": { "method": "GET", "url": "{{baseUrl}}/paiements/9999" } },
+        { "name": "Créer un paiement séparément (405 attendu)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"montant\": 10 }" }, "url": "{{baseUrl}}/paiements" } },
+        { "name": "Vérifier la suppression en cascade (404 attendu)", "request": { "method": "GET", "url": "{{baseUrl}}/paiements/{{paiementId}}" } }
+      ]
+    },
+    {
+      "name": "Maintenances",
+      "item": [
+        { "name": "Lister les maintenances (200)", "request": { "method": "GET", "url": "{{baseUrl}}/maintenances" } },
+        { "name": "Maintenance absente (404)", "request": { "method": "GET", "url": "{{baseUrl}}/maintenances/9999" } },
+        { "name": "Maintenance invalide - coût négatif (400)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"cout\": -1.00 }" }, "url": "{{baseUrl}}/maintenances" } }
+      ]
+    }
+  ]
+}

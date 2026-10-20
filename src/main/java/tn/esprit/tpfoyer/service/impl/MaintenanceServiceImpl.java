@@ -7,6 +7,8 @@ import tn.esprit.tpfoyer.domain.Maintenance;
 import tn.esprit.tpfoyer.repository.IMaintenanceRepository;
 import tn.esprit.tpfoyer.service.IMaintenanceService;
 
+import java.math.BigDecimal;
+
 @Service
 @RequiredArgsConstructor
 public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance> implements IMaintenanceService {
@@ -30,6 +32,9 @@ public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance> imp
 
     @Override
     protected void validate(Maintenance maintenance) {
+        if (maintenance.getCout() != null && maintenance.getCout().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Le coût de la maintenance ne peut pas être négatif");
+        }
         if (maintenance.getDateDebut() != null && maintenance.getDateFin() != null
                 && maintenance.getDateFin().isBefore(maintenance.getDateDebut())) {
             throw new IllegalArgumentException("La date de fin doit être égale ou postérieure à la date de début");
@@ -41,6 +46,7 @@ public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance> imp
         existing.setDateDebut(updates.getDateDebut());
         existing.setDateFin(updates.getDateFin());
         existing.setDescription(updates.getDescription());
+        existing.setCout(updates.getCout());
         existing.setVehicule(updates.getVehicule());
     }
 }
