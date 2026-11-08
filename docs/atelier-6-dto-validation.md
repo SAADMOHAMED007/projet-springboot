@@ -201,6 +201,9 @@ Captures d'écran (dossier `docs/screenshots/`) :
 | `swagger-vehicule-request-schema.png` | Schéma `VehiculeRequest` : champs obligatoires, tailles, `tarifJournalier >= 0`, énumérations |
 | `swagger-execution-201.png` | Exécution réelle de `POST /agences` : statut 201 et corps de réponse DTO |
 | `swagger-execution-400-validation.png` | Exécution réelle d'un `POST /agences` invalide : statut 400 et erreurs par champ |
+| `swagger-execution-200-list.png` | Exécution réelle de `GET /agences` : statut 200 et liste de `AgenceResponse` |
+| `swagger-execution-404.png` | Exécution réelle de `GET /agences/9999` : statut 404 et `ProblemDetail` |
+| `swagger-execution-409.png` | Exécution réelle d'un `POST /vehicules` avec immatriculation dupliquée : statut 409 et `ProblemDetail` |
 
 Les captures d'écran du dossier `docs/screenshots/` constituent la preuve d'exécution demandée par le lab.
 
