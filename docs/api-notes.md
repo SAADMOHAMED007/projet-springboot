@@ -79,7 +79,7 @@ Swagger UI : `/api/swagger-ui.html`. Document JSON : `/api/v3/api-docs`.
 | Sérialisation cyclique et lien enfant-parent non fiable pour Contrat/Paiement. | Remplacement de l'identité Jackson sur cette association par la paire `@JsonManagedReference` / `@JsonBackReference`, et cascade JPA `ALL`. |
 | Dépendances de contrôleurs : injection directement par constructeur plutôt que champ `@Autowired` (prévention du problème Sonar S6813). | Tous les contrôleurs utilisent `@RequiredArgsConstructor` et un champ `final` typé par l'interface `I...Service`. |
 
-L'analyse SonarQube for IDE n'est pas intégrée au dépôt ; ces corrections sont vérifiées dans le code et ne sont pas présentées comme un rapport IDE. Depuis l'atelier 6, l'API n'expose plus les entités : les contrôleurs et les services échangent des DTO, et les mappers assurent la conversion. Voir `docs/atelier-6-dto-validation.md`.
+L'analyse SonarQube for IDE n'est pas intégrée au dépôt ; ces corrections sont vérifiées dans le code et ne sont pas présentées comme un rapport IDE. Depuis l'atelier 6, l'API n'expose plus les entités : les contrôleurs et les services échangent des DTO, et les mappers assurent la conversion.
 
 ## E. Questions de compréhension
 
