@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Equipement;
 import tn.esprit.tpfoyer.repository.IEquipementRepository;
 import tn.esprit.tpfoyer.service.IEquipementService;
+import tn.esprit.tpfoyer.web.dto.EquipementRequest;
+import tn.esprit.tpfoyer.web.dto.EquipementResponse;
+import tn.esprit.tpfoyer.web.mapper.EquipementMapper;
 
 @Service
 @RequiredArgsConstructor
-public class EquipementServiceImpl extends AbstractCrudService<Equipement> implements IEquipementService {
+public class EquipementServiceImpl extends AbstractCrudService<Equipement, EquipementRequest, EquipementResponse>
+        implements IEquipementService {
 
     private final IEquipementRepository equipementRepository;
+    private final EquipementMapper equipementMapper;
 
     @Override
     protected JpaRepository<Equipement, Long> repository() {
@@ -19,8 +24,8 @@ public class EquipementServiceImpl extends AbstractCrudService<Equipement> imple
     }
 
     @Override
-    protected Long getId(Equipement equipement) {
-        return equipement.getIdEquipement();
+    protected EquipementMapper mapper() {
+        return equipementMapper;
     }
 
     @Override

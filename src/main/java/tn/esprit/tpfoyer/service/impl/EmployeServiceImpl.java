@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Employe;
 import tn.esprit.tpfoyer.repository.IEmployeRepository;
 import tn.esprit.tpfoyer.service.IEmployeService;
+import tn.esprit.tpfoyer.web.dto.EmployeRequest;
+import tn.esprit.tpfoyer.web.dto.EmployeResponse;
+import tn.esprit.tpfoyer.web.mapper.EmployeMapper;
 
 @Service
 @RequiredArgsConstructor
-public class EmployeServiceImpl extends AbstractCrudService<Employe> implements IEmployeService {
+public class EmployeServiceImpl extends AbstractCrudService<Employe, EmployeRequest, EmployeResponse>
+        implements IEmployeService {
 
     private final IEmployeRepository employeRepository;
+    private final EmployeMapper employeMapper;
 
     @Override
     protected JpaRepository<Employe, Long> repository() {
@@ -19,8 +24,8 @@ public class EmployeServiceImpl extends AbstractCrudService<Employe> implements 
     }
 
     @Override
-    protected Long getId(Employe employe) {
-        return employe.getIdEmploye();
+    protected EmployeMapper mapper() {
+        return employeMapper;
     }
 
     @Override

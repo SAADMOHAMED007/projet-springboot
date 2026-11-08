@@ -1,12 +1,12 @@
 package tn.esprit.tpfoyer.service;
 
-import tn.esprit.tpfoyer.domain.Paiement;
+import tn.esprit.tpfoyer.web.dto.PaiementResponse;
 
 import java.util.List;
 
 public interface IPaiementService {
 
-    Paiement findById(Long id);
+    PaiementResponse findById(Long id);
 
-    List<Paiement> findAll();
+    List<PaiementResponse> findAll();
 }

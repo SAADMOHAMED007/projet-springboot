@@ -6,14 +6,19 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Maintenance;
 import tn.esprit.tpfoyer.repository.IMaintenanceRepository;
 import tn.esprit.tpfoyer.service.IMaintenanceService;
+import tn.esprit.tpfoyer.web.dto.MaintenanceRequest;
+import tn.esprit.tpfoyer.web.dto.MaintenanceResponse;
+import tn.esprit.tpfoyer.web.mapper.MaintenanceMapper;
 
 import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
-public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance> implements IMaintenanceService {
+public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance, MaintenanceRequest, MaintenanceResponse>
+        implements IMaintenanceService {
 
     private final IMaintenanceRepository maintenanceRepository;
+    private final MaintenanceMapper maintenanceMapper;
 
     @Override
     protected JpaRepository<Maintenance, Long> repository() {
@@ -21,8 +26,8 @@ public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance> imp
     }
 
     @Override
-    protected Long getId(Maintenance maintenance) {
-        return maintenance.getIdMaintenance();
+    protected MaintenanceMapper mapper() {
+        return maintenanceMapper;
     }
 
     @Override

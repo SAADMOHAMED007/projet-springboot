@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Reservation;
 import tn.esprit.tpfoyer.repository.IReservationRepository;
 import tn.esprit.tpfoyer.service.IReservationService;
+import tn.esprit.tpfoyer.web.dto.ReservationRequest;
+import tn.esprit.tpfoyer.web.dto.ReservationResponse;
+import tn.esprit.tpfoyer.web.mapper.ReservationMapper;
 
 @Service
 @RequiredArgsConstructor
-public class ReservationServiceImpl extends AbstractCrudService<Reservation> implements IReservationService {
+public class ReservationServiceImpl extends AbstractCrudService<Reservation, ReservationRequest, ReservationResponse>
+        implements IReservationService {
 
     private final IReservationRepository reservationRepository;
+    private final ReservationMapper reservationMapper;
 
     @Override
     protected JpaRepository<Reservation, Long> repository() {
@@ -19,8 +24,8 @@ public class ReservationServiceImpl extends AbstractCrudService<Reservation> imp
     }
 
     @Override
-    protected Long getId(Reservation reservation) {
-        return reservation.getIdReservation();
+    protected ReservationMapper mapper() {
+        return reservationMapper;
     }
 
     @Override

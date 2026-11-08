@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Vehicule;
 import tn.esprit.tpfoyer.repository.IVehiculeRepository;
 import tn.esprit.tpfoyer.service.IVehiculeService;
+import tn.esprit.tpfoyer.web.dto.VehiculeRequest;
+import tn.esprit.tpfoyer.web.dto.VehiculeResponse;
+import tn.esprit.tpfoyer.web.mapper.VehiculeMapper;
 
 @Service
 @RequiredArgsConstructor
-public class VehiculeServiceImpl extends AbstractCrudService<Vehicule> implements IVehiculeService {
+public class VehiculeServiceImpl extends AbstractCrudService<Vehicule, VehiculeRequest, VehiculeResponse>
+        implements IVehiculeService {
 
     private final IVehiculeRepository vehiculeRepository;
+    private final VehiculeMapper vehiculeMapper;
 
     @Override
     protected JpaRepository<Vehicule, Long> repository() {
@@ -19,8 +24,8 @@ public class VehiculeServiceImpl extends AbstractCrudService<Vehicule> implement
     }
 
     @Override
-    protected Long getId(Vehicule vehicule) {
-        return vehicule.getIdVehicule();
+    protected VehiculeMapper mapper() {
+        return vehiculeMapper;
     }
 
     @Override

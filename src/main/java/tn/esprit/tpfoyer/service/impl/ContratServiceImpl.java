@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Contrat;
 import tn.esprit.tpfoyer.repository.IContratRepository;
 import tn.esprit.tpfoyer.service.IContratService;
+import tn.esprit.tpfoyer.web.dto.ContratRequest;
+import tn.esprit.tpfoyer.web.dto.ContratResponse;
+import tn.esprit.tpfoyer.web.mapper.ContratMapper;
 
 @Service
 @RequiredArgsConstructor
-public class ContratServiceImpl extends AbstractCrudService<Contrat> implements IContratService {
+public class ContratServiceImpl extends AbstractCrudService<Contrat, ContratRequest, ContratResponse>
+        implements IContratService {
 
     private final IContratRepository contratRepository;
+    private final ContratMapper contratMapper;
 
     @Override
     protected JpaRepository<Contrat, Long> repository() {
@@ -19,8 +24,8 @@ public class ContratServiceImpl extends AbstractCrudService<Contrat> implements 
     }
 
     @Override
-    protected Long getId(Contrat contrat) {
-        return contrat.getIdContrat();
+    protected ContratMapper mapper() {
+        return contratMapper;
     }
 
     @Override
@@ -40,6 +45,8 @@ public class ContratServiceImpl extends AbstractCrudService<Contrat> implements 
         existing.setDateSignature(updates.getDateSignature());
         existing.setMontantTotal(updates.getMontantTotal());
         existing.setValide(updates.isValide());
-        existing.setReservation(updates.getReservation());
+        if (updates.getReservation() != null) {
+            existing.setReservation(updates.getReservation());
+        }
     }
 }

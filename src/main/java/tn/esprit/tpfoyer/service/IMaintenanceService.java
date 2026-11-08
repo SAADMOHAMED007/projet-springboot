@@ -1,6 +1,7 @@
 package tn.esprit.tpfoyer.service;
 
-import tn.esprit.tpfoyer.domain.Maintenance;
+import tn.esprit.tpfoyer.web.dto.MaintenanceRequest;
+import tn.esprit.tpfoyer.web.dto.MaintenanceResponse;
 
-public interface IMaintenanceService extends CrudService<Maintenance> {
+public interface IMaintenanceService extends CrudService<MaintenanceRequest, MaintenanceResponse> {
 }

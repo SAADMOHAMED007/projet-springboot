@@ -53,6 +53,8 @@ Un POST `/api/paiements` n'est pas mappé : Spring répond 405. Les montants, ta
 
 ## B. Annotations Jackson
 
+> Depuis l'atelier 6, les contrôleurs ne sérialisent plus les entités : les réponses sont des DTO plats. Les annotations ci-dessous restent utiles pour la sérialisation interne des entités.
+
 | Association | Annotation | Justification |
 |---|---|---|
 | Contrat → Paiements | `@JsonManagedReference` sur `Contrat.paiements` et `@JsonBackReference` sur `Paiement.contrat` | Le contrat sérialise la liste, le paiement ne ré-embarque pas son contrat. Cette paire évite la boucle et permet à Jackson de renseigner le lien inverse à la désérialisation. |
@@ -77,7 +79,7 @@ Swagger UI : `/api/swagger-ui.html`. Document JSON : `/api/v3/api-docs`.
 | Sérialisation cyclique et lien enfant-parent non fiable pour Contrat/Paiement. | Remplacement de l'identité Jackson sur cette association par la paire `@JsonManagedReference` / `@JsonBackReference`, et cascade JPA `ALL`. |
 | Dépendances de contrôleurs : injection directement par constructeur plutôt que champ `@Autowired` (prévention du problème Sonar S6813). | Tous les contrôleurs utilisent `@RequiredArgsConstructor` et un champ `final` typé par l'interface `I...Service`. |
 
-L'analyse SonarQube for IDE n'est pas intégrée au dépôt ; ces corrections sont vérifiées dans le code et ne sont pas présentées comme un rapport IDE. L'exposition directe d'entités JPA reste adaptée à cet atelier, mais une API de production devrait séparer les DTO du modèle de persistance pour maîtriser les champs et associations exposés.
+L'analyse SonarQube for IDE n'est pas intégrée au dépôt ; ces corrections sont vérifiées dans le code et ne sont pas présentées comme un rapport IDE. Depuis l'atelier 6, l'API n'expose plus les entités : les contrôleurs et les services échangent des DTO, et les mappers assurent la conversion. Voir `docs/atelier-6-dto-validation.md`.
 
 ## E. Questions de compréhension
 

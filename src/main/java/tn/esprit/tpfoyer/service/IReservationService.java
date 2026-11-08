@@ -1,6 +1,7 @@
 package tn.esprit.tpfoyer.service;
 
-import tn.esprit.tpfoyer.domain.Reservation;
+import tn.esprit.tpfoyer.web.dto.ReservationRequest;
+import tn.esprit.tpfoyer.web.dto.ReservationResponse;
 
-public interface IReservationService extends CrudService<Reservation> {
+public interface IReservationService extends CrudService<ReservationRequest, ReservationResponse> {
 }

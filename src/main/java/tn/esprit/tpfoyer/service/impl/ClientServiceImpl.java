@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Client;
 import tn.esprit.tpfoyer.repository.IClientRepository;
 import tn.esprit.tpfoyer.service.IClientService;
+import tn.esprit.tpfoyer.web.dto.ClientRequest;
+import tn.esprit.tpfoyer.web.dto.ClientResponse;
+import tn.esprit.tpfoyer.web.mapper.ClientMapper;
 
 @Service
 @RequiredArgsConstructor
-public class ClientServiceImpl extends AbstractCrudService<Client> implements IClientService {
+public class ClientServiceImpl extends AbstractCrudService<Client, ClientRequest, ClientResponse>
+        implements IClientService {
 
     private final IClientRepository clientRepository;
+    private final ClientMapper clientMapper;
 
     @Override
     protected JpaRepository<Client, Long> repository() {
@@ -19,8 +24,8 @@ public class ClientServiceImpl extends AbstractCrudService<Client> implements IC
     }
 
     @Override
-    protected Long getId(Client client) {
-        return client.getIdClient();
+    protected ClientMapper mapper() {
+        return clientMapper;
     }
 
     @Override

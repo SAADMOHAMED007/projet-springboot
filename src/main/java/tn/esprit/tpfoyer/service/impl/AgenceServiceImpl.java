@@ -6,12 +6,17 @@ import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Agence;
 import tn.esprit.tpfoyer.repository.IAgenceRepository;
 import tn.esprit.tpfoyer.service.IAgenceService;
+import tn.esprit.tpfoyer.web.dto.AgenceRequest;
+import tn.esprit.tpfoyer.web.dto.AgenceResponse;
+import tn.esprit.tpfoyer.web.mapper.AgenceMapper;
 
 @Service
 @RequiredArgsConstructor
-public class AgenceServiceImpl extends AbstractCrudService<Agence> implements IAgenceService {
+public class AgenceServiceImpl extends AbstractCrudService<Agence, AgenceRequest, AgenceResponse>
+        implements IAgenceService {
 
     private final IAgenceRepository agenceRepository;
+    private final AgenceMapper agenceMapper;
 
     @Override
     protected JpaRepository<Agence, Long> repository() {
@@ -19,8 +24,8 @@ public class AgenceServiceImpl extends AbstractCrudService<Agence> implements IA
     }
 
     @Override
-    protected Long getId(Agence agence) {
-        return agence.getIdAgence();
+    protected AgenceMapper mapper() {
+        return agenceMapper;
     }
 
     @Override

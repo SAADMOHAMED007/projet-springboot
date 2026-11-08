@@ -2,17 +2,18 @@ package tn.esprit.tpfoyer.service.impl;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
-import tn.esprit.tpfoyer.service.CrudService;
 import tn.esprit.tpfoyer.exception.ResourceNotFoundException;
+import tn.esprit.tpfoyer.service.CrudService;
+import tn.esprit.tpfoyer.web.mapper.EntityMapper;
 
 import java.util.List;
 
 @Transactional
-public abstract class AbstractCrudService<T> implements CrudService<T> {
+public abstract class AbstractCrudService<T, REQ, RES> implements CrudService<REQ, RES> {
 
     protected abstract JpaRepository<T, Long> repository();
 
-    protected abstract Long getId(T entity);
+    protected abstract EntityMapper<T, REQ, RES> mapper();
 
     protected abstract String entityName();
 
@@ -21,35 +22,35 @@ public abstract class AbstractCrudService<T> implements CrudService<T> {
     protected abstract void copyMutableFields(T existing, T updates);
 
     @Override
-    public T create(T entity) {
-        requireEntity(entity);
-        if (getId(entity) != null) {
-            throw new IllegalArgumentException("A new entity must not have an id");
-        }
+    public RES create(REQ request) {
+        requireRequest(request);
+        T entity = mapper().toEntity(request);
         validate(entity);
-        return repository().save(entity);
+        return mapper().toResponse(repository().save(entity));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public T findById(Long id) {
-        return repository().findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException(entityName(), id));
+    public RES findById(Long id) {
+        return mapper().toResponse(findEntity(id));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<T> findAll() {
-        return repository().findAll();
+    public List<RES> findAll() {
+        return repository().findAll().stream()
+                .map(mapper()::toResponse)
+                .toList();
     }
 
     @Override
-    public T update(Long id, T entity) {
-        requireEntity(entity);
-        T existing = findById(id);
-        validate(entity);
-        copyMutableFields(existing, entity);
-        return repository().save(existing);
+    public RES update(Long id, REQ request) {
+        requireRequest(request);
+        T existing = findEntity(id);
+        T updates = mapper().toEntity(request);
+        validate(updates);
+        copyMutableFields(existing, updates);
+        return mapper().toResponse(repository().save(existing));
     }
 
     @Override
@@ -60,9 +61,14 @@ public abstract class AbstractCrudService<T> implements CrudService<T> {
         repository().deleteById(id);
     }
 
-    private void requireEntity(T entity) {
-        if (entity == null) {
-            throw new IllegalArgumentException("Entity must not be null");
+    protected T findEntity(Long id) {
+        return repository().findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(entityName(), id));
+    }
+
+    private void requireRequest(REQ request) {
+        if (request == null) {
+            throw new IllegalArgumentException("La requête ne peut pas être nulle");
         }
     }
 }
