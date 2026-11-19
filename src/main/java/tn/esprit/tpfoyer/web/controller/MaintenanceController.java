@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import tn.esprit.tpfoyer.service.IMaintenanceService;
 import tn.esprit.tpfoyer.web.dto.MaintenanceRequest;
 import tn.esprit.tpfoyer.web.dto.MaintenanceResponse;
+import tn.esprit.tpfoyer.web.dto.VehiculeDTO;
 
 import java.util.List;
 
@@ -58,5 +59,18 @@ public class MaintenanceController {
     @ApiResponses({@ApiResponse(responseCode = "204", description = "Maintenance supprimée"), @ApiResponse(responseCode = "404", description = "Maintenance introuvable")})
     public void deleteById(@Parameter(description = "Identifiant de la maintenance") @PathVariable Long id) {
         maintenanceService.deleteById(id);
+    }
+
+    @PutMapping("/vehicule")
+    @Operation(summary = "Affecter une maintenance à un véhicule",
+            description = "Rattache la maintenance identifiée par sa description au véhicule identifié par son immatriculation.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Maintenance affectée au véhicule"),
+            @ApiResponse(responseCode = "404", description = "Maintenance ou véhicule introuvable")
+    })
+    public VehiculeDTO affecterMaintenanceAvehicule(
+            @Parameter(description = "Description de la maintenance") @RequestParam String description,
+            @Parameter(description = "Immatriculation du véhicule") @RequestParam String immatriculation) {
+        return maintenanceService.affecterMaintenanceAvehicule(description, immatriculation);
     }
 }

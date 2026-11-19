@@ -3,19 +3,23 @@ package tn.esprit.tpfoyer.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
+import tn.esprit.tpfoyer.domain.Equipement;
 import tn.esprit.tpfoyer.domain.Vehicule;
+import tn.esprit.tpfoyer.exception.ResourceNotFoundException;
+import tn.esprit.tpfoyer.repository.IEquipementRepository;
 import tn.esprit.tpfoyer.repository.IVehiculeRepository;
 import tn.esprit.tpfoyer.service.IVehiculeService;
+import tn.esprit.tpfoyer.web.dto.VehiculeDTO;
 import tn.esprit.tpfoyer.web.dto.VehiculeRequest;
-import tn.esprit.tpfoyer.web.dto.VehiculeResponse;
 import tn.esprit.tpfoyer.web.mapper.VehiculeMapper;
 
 @Service
 @RequiredArgsConstructor
-public class VehiculeServiceImpl extends AbstractCrudService<Vehicule, VehiculeRequest, VehiculeResponse>
+public class VehiculeServiceImpl extends AbstractCrudService<Vehicule, VehiculeRequest, VehiculeDTO>
         implements IVehiculeService {
 
     private final IVehiculeRepository vehiculeRepository;
+    private final IEquipementRepository equipementRepository;
     private final VehiculeMapper vehiculeMapper;
 
     @Override
@@ -53,5 +57,14 @@ public class VehiculeServiceImpl extends AbstractCrudService<Vehicule, VehiculeR
         existing.setStatut(updates.getStatut());
         existing.setAgence(updates.getAgence());
         existing.setEquipements(updates.getEquipements());
+    }
+
+    @Override
+    public VehiculeDTO affecterVehiculeAEquipement(Long idVehicule, Long idEquipement) {
+        Vehicule vehicule = findEntity(idVehicule);
+        Equipement equipement = equipementRepository.findById(idEquipement)
+                .orElseThrow(() -> new ResourceNotFoundException("Équipement", idEquipement));
+        vehicule.getEquipements().add(equipement);
+        return vehiculeMapper.toResponse(vehiculeRepository.save(vehicule));
     }
 }

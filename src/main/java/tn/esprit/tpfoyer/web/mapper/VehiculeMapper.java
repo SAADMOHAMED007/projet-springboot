@@ -9,8 +9,9 @@ import tn.esprit.tpfoyer.exception.ResourceNotFoundException;
 import tn.esprit.tpfoyer.repository.IAgenceRepository;
 import tn.esprit.tpfoyer.repository.IEquipementRepository;
 import tn.esprit.tpfoyer.web.dto.EquipementResponse;
+import tn.esprit.tpfoyer.web.dto.MaintenanceResponse;
 import tn.esprit.tpfoyer.web.dto.VehiculeRequest;
-import tn.esprit.tpfoyer.web.dto.VehiculeResponse;
+import tn.esprit.tpfoyer.web.dto.VehiculeDTO;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -18,11 +19,12 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-public class VehiculeMapper implements EntityMapper<Vehicule, VehiculeRequest, VehiculeResponse> {
+public class VehiculeMapper implements EntityMapper<Vehicule, VehiculeRequest, VehiculeDTO> {
 
     private final IAgenceRepository agenceRepository;
     private final IEquipementRepository equipementRepository;
     private final EquipementMapper equipementMapper;
+    private final MaintenanceMapper maintenanceMapper;
 
     @Override
     public Vehicule toEntity(VehiculeRequest request) {
@@ -39,12 +41,15 @@ public class VehiculeMapper implements EntityMapper<Vehicule, VehiculeRequest, V
     }
 
     @Override
-    public VehiculeResponse toResponse(Vehicule vehicule) {
+    public VehiculeDTO toResponse(Vehicule vehicule) {
         Agence agence = vehicule.getAgence();
         List<EquipementResponse> equipements = vehicule.getEquipements().stream()
                 .map(equipementMapper::toResponse)
                 .toList();
-        return new VehiculeResponse(
+        List<MaintenanceResponse> maintenances = vehicule.getMaintenances().stream()
+                .map(maintenanceMapper::toResponse)
+                .toList();
+        return new VehiculeDTO(
                 vehicule.getIdVehicule(),
                 vehicule.getImmatriculation(),
                 vehicule.getMarque(),
@@ -54,7 +59,8 @@ public class VehiculeMapper implements EntityMapper<Vehicule, VehiculeRequest, V
                 vehicule.getStatut(),
                 agence != null ? agence.getIdAgence() : null,
                 agence != null ? agence.getNom() : null,
-                equipements
+                equipements,
+                maintenances
         );
     }
 

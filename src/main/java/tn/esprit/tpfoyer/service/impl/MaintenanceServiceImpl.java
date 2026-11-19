@@ -4,11 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import tn.esprit.tpfoyer.domain.Maintenance;
+import tn.esprit.tpfoyer.domain.Vehicule;
+import tn.esprit.tpfoyer.exception.ResourceNotFoundException;
 import tn.esprit.tpfoyer.repository.IMaintenanceRepository;
+import tn.esprit.tpfoyer.repository.IVehiculeRepository;
 import tn.esprit.tpfoyer.service.IMaintenanceService;
 import tn.esprit.tpfoyer.web.dto.MaintenanceRequest;
 import tn.esprit.tpfoyer.web.dto.MaintenanceResponse;
+import tn.esprit.tpfoyer.web.dto.VehiculeDTO;
 import tn.esprit.tpfoyer.web.mapper.MaintenanceMapper;
+import tn.esprit.tpfoyer.web.mapper.VehiculeMapper;
 
 import java.math.BigDecimal;
 
@@ -18,7 +23,9 @@ public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance, Mai
         implements IMaintenanceService {
 
     private final IMaintenanceRepository maintenanceRepository;
+    private final IVehiculeRepository vehiculeRepository;
     private final MaintenanceMapper maintenanceMapper;
+    private final VehiculeMapper vehiculeMapper;
 
     @Override
     protected JpaRepository<Maintenance, Long> repository() {
@@ -53,5 +60,21 @@ public class MaintenanceServiceImpl extends AbstractCrudService<Maintenance, Mai
         existing.setDescription(updates.getDescription());
         existing.setCout(updates.getCout());
         existing.setVehicule(updates.getVehicule());
+    }
+
+    @Override
+    public VehiculeDTO affecterMaintenanceAvehicule(String description, String immatriculation) {
+        Maintenance maintenance = maintenanceRepository.findFirstByDescriptionIgnoreCase(description)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Maintenance introuvable avec la description '" + description + "'"));
+        Vehicule vehicule = vehiculeRepository.findByImmatriculationIgnoreCase(immatriculation)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Véhicule introuvable avec l'immatriculation '" + immatriculation + "'"));
+
+        maintenance.setVehicule(vehicule);
+        maintenanceRepository.save(maintenance);
+        vehicule.getMaintenances().add(maintenance);
+
+        return vehiculeMapper.toResponse(vehicule);
     }
 }

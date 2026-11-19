@@ -25,7 +25,6 @@ public record ContratRequest(
         @Positive(message = "L'identifiant de la réservation doit être positif")
         Long idReservation,
 
-        @Valid
         List<@Valid PaiementRequest> paiements
 ) {
 }

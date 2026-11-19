@@ -9,11 +9,11 @@ import tn.esprit.tpfoyer.exception.ResourceNotFoundException;
 import tn.esprit.tpfoyer.repository.IClientRepository;
 import tn.esprit.tpfoyer.repository.IVehiculeRepository;
 import tn.esprit.tpfoyer.web.dto.ReservationRequest;
-import tn.esprit.tpfoyer.web.dto.ReservationResponse;
+import tn.esprit.tpfoyer.web.dto.ReservationResponseDTO;
 
 @Component
 @RequiredArgsConstructor
-public class ReservationMapper implements EntityMapper<Reservation, ReservationRequest, ReservationResponse> {
+public class ReservationMapper implements EntityMapper<Reservation, ReservationRequest, ReservationResponseDTO> {
 
     private final IVehiculeRepository vehiculeRepository;
     private final IClientRepository clientRepository;
@@ -30,10 +30,10 @@ public class ReservationMapper implements EntityMapper<Reservation, ReservationR
     }
 
     @Override
-    public ReservationResponse toResponse(Reservation reservation) {
+    public ReservationResponseDTO toResponse(Reservation reservation) {
         Vehicule vehicule = reservation.getVehicule();
         Client client = reservation.getClient();
-        return new ReservationResponse(
+        return new ReservationResponseDTO(
                 reservation.getIdReservation(),
                 reservation.getDateDebut(),
                 reservation.getDateFin(),

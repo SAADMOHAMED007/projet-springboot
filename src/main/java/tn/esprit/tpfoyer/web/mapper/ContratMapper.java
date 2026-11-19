@@ -8,7 +8,7 @@ import tn.esprit.tpfoyer.domain.Reservation;
 import tn.esprit.tpfoyer.exception.ResourceNotFoundException;
 import tn.esprit.tpfoyer.repository.IReservationRepository;
 import tn.esprit.tpfoyer.web.dto.ContratRequest;
-import tn.esprit.tpfoyer.web.dto.ContratResponse;
+import tn.esprit.tpfoyer.web.dto.ContratDTO;
 import tn.esprit.tpfoyer.web.dto.PaiementRequest;
 import tn.esprit.tpfoyer.web.dto.PaiementResponse;
 
@@ -16,7 +16,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class ContratMapper implements EntityMapper<Contrat, ContratRequest, ContratResponse> {
+public class ContratMapper implements EntityMapper<Contrat, ContratRequest, ContratDTO> {
 
     private final IReservationRepository reservationRepository;
     private final PaiementMapper paiementMapper;
@@ -39,11 +39,11 @@ public class ContratMapper implements EntityMapper<Contrat, ContratRequest, Cont
     }
 
     @Override
-    public ContratResponse toResponse(Contrat contrat) {
+    public ContratDTO toResponse(Contrat contrat) {
         List<PaiementResponse> paiements = contrat.getPaiements().stream()
                 .map(paiementMapper::toResponse)
                 .toList();
-        return new ContratResponse(
+        return new ContratDTO(
                 contrat.getIdContrat(),
                 contrat.getDateSignature(),
                 contrat.getMontantTotal(),

@@ -6,7 +6,7 @@ import tn.esprit.tpfoyer.domain.StatutVehicule;
 import java.math.BigDecimal;
 import java.util.List;
 
-public record VehiculeResponse(
+public record VehiculeDTO(
         Long idVehicule,
         String immatriculation,
         String marque,
@@ -16,6 +16,7 @@ public record VehiculeResponse(
         StatutVehicule statut,
         Long idAgence,
         String agenceNom,
-        List<EquipementResponse> equipements
+        List<EquipementResponse> equipements,
+        List<MaintenanceResponse> maintenances
 ) {
 }

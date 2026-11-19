@@ -4,7 +4,7 @@ import tn.esprit.tpfoyer.domain.StatutReservation;
 
 import java.time.LocalDate;
 
-public record ReservationResponse(
+public record ReservationResponseDTO(
         Long idReservation,
         LocalDate dateDebut,
         LocalDate dateFin,
